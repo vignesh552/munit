@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<munit:config name="eapi-payroll-test-suite.xml" />
+	<munit:test name="eapi-payroll-test-suite-post:\employees:application\json:eapi-payroll-configTest" doc:id="7f7be296-544e-4f54-a5e1-bffca6a0ff68" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="eapi-payroll-main" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a6d54f12-4ed2-4316-ba53-bc790640fd69" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="683b3c8a-7433-475a-b84f-742b86e2bf49" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[readUrl("classpath://mock-data/insert-output.json","application/json")]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="ee1690d0-9947-47a4-9337-54eb72e79d7d" >
+				<munit:payload value='#[readUrl("classpath://mock-data/input-data.json","application/json")]' mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\employees:application\json:eapi-payroll-config" doc:id="47543748-78d3-4343-9527-11f5c100c58b" name="post:\employees:application\json:eapi-payroll-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="bf61e605-c129-4f95-bfc7-b70ba89ce86b" actual="#[payload]" expected='#[readUrl("classpath://mock-data/insert-output.json","application/json")]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-put:\employees:application\json:eapi-payroll-configTest" doc:id="dad7ebf3-08cb-4fa9-9a11-ad805a22cc04" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b15992ec-efe5-4b55-a33e-83225acb09f4" processor="db:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="85f8b887-5d40-4802-b4e9-4ea703257232" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[readUrl("classpath://mock-data/update-output.json","application/json")]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="4e2d4e0c-7109-4d89-83d2-f21d7353cf02">
+				<munit:payload value='#[readUrl("classpath://mock-data/inputupdate-data.json","application/json")]' mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to put:\employees:application\json:eapi-payroll-config" doc:id="2d9ce959-75f5-4a5b-b5c6-04e9698a0e4c" name="put:\employees:application\json:eapi-payroll-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="808b36ec-53a2-4cdc-ab59-69f741b2d7f0" actual="#[payload]" expected='#[readUrl("classpath://mock-data/update-output.json","application/json")]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-delete:\employees:application\json:eapi-payroll-configTest" doc:id="fba5b054-0d9b-480c-8c17-caedbb82d3de" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a33751ff-16c9-4041-95da-2e2f13aba025" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="29f298f7-5781-4677-a147-3c3127446510" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[readUrl("classpath://mock-data/outputdelete-data.json","application/json")]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="0be7f2cf-a092-4fdc-a47b-18e9cc2f1d57" >
+				<munit:payload value='#[readUrl("classpath://mock-data/inputdelete-data.json","application/json")]' encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\employees:application\json:eapi-payroll-config" doc:id="b13616e6-fa4e-4e6f-9342-32d6041abcad" name="delete:\employees:application\json:eapi-payroll-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="075710ac-f265-4780-8f30-143b9555e286" actual="#[payload]" expected='#[readUrl("classpath://mock-data/outputdelete-data.json","application/json")]'/>
+		</munit:validation>
+		 
+    
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest" doc:id="ed81534c-d8d0-442e-9735-4ee752ad86cd" description="Test" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="95861cb5-5cd9-4b03-9eeb-45c6d03b6c0b" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="0302fdeb-93fe-443c-90e5-aa1339081933" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="ca77ac19-b690-4d22-8d6f-18639cf1e6a8" actual='#[payload]' expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Bad request"}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest1" doc:id="932cc528-4574-48f6-a20e-c41e48ab01ae" description="Test" expectedErrorType="APIKIT:NOT_FOUND" timeOut="1200000000">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b4944c6c-cb80-4879-9e00-b51b49b6d258" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="09ea3659-5ad3-4486-8c9f-f7c8ce508b09" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f7d0b41f-8dc9-49ea-b2f9-f4a6527ba860" actual='#[payload]' expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Resource not found"}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest2" doc:id="6d010ed2-5333-4b3f-9392-b100c39f8228" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED" timeOut="1200000000">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="0fe51fc2-9a61-48e1-b52f-23ba8ad4f4e1" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="052290fe-4f02-4555-97a7-fb9a4cf01fbf" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="07f07447-3e2e-46bf-9e10-4e02d5f6427e" actual='#[payload]' expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Method not allowed"}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest3" doc:id="2394655f-34c1-4167-934f-1207b30baa1f" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE" timeOut="1200000000">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="dff070f7-08fc-4eb9-a1f7-b4772d5dd753" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="a1c6251d-aa29-4934-8593-f8c4d58631ac" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="070fb1d7-1617-47b5-ac50-eabb4c05fb5b" actual="#[payload]" expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Not acceptable"}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest4" doc:id="dd5a9716-5dfe-4d35-9bd0-28eb26818432" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE" timeOut="1200000000">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="0d0740c5-68c3-4e88-a3a3-6f8b0aef3aba" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="f7bb411a-d6a2-4b83-9ea6-da038611f856" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d924c261-bdc8-4275-91da-26e2c565ce75" actual="#[payload]" expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Unsupported media type"}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="eapi-payroll-test-suite-eapi-payroll-mainTest5" doc:id="d3f091be-05f6-487f-bd52-9e63f6c5d5fc" description="Test" expectedErrorType="APIKIT:NOT_IMPLEMENTED" timeOut="1200000000">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="329194ad-503f-4bef-89de-d92d0ff682a6" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eapi-payroll-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to eapi-payroll-main" doc:id="a3e7e22e-c66d-421a-b4fa-1576d5df9301" name="eapi-payroll-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="bde362af-1731-4ef7-965c-fa316f41fd23" actual="#[payload]" expected='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Not Implemented"}]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

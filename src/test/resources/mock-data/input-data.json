@@ -1,0 +1,9 @@
+{
+        "employeeid": 13,
+        "employeename": "VJ",
+        "age": 42,
+        "designation": "lead",
+        "department": 2,
+        "salary": 1000,
+        "address": "velur" 
+}

@@ -1,0 +1,6 @@
+{
+  "post.example": {
+    "status": "Success",
+    "message": "Employee record inserted successfully"
+  }
+}
